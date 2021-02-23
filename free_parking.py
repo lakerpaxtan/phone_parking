@@ -9,10 +9,11 @@ from selenium.common.exceptions import NoSuchElementException
 
 LOGGER = logging.getLogger(__name__)
 
-F_DRIVER = r'Driver/geckodriver.exe'
-CACHE = r"Phone_Results/cache/records.txt"
-PROFILE = r'Profile/rust_mozprofileNODzu1'
-RESULTS_FOLDER = r'Phone_Results/'
+DIR_NAME = os.path.dirname(os.path.realpath(__file__))
+F_DRIVER = os.path.join(DIR_NAME, r'Driver/geckodriver.exe')
+CACHE = os.path.join(DIR_NAME, r"Phone_Results/cache/records.txt")
+PROFILE = os.path.join(DIR_NAME, r'Profile/rust_mozprofileNODzu1')
+RESULTS_FOLDER = os.path.join(DIR_NAME, r'Phone_Results/')
 BASE_PAGE = "https://payments.wikimedia.org/index.php/Special:GatewayFormChooser?payment_method=amazon&recurring=" \
             "false&currency_code=USD&country=US&uselang=en&amount=1&utm_medium=wmfSite&utm_campaign=navButton&utm_" \
             "source=113.default~default~default~default~control.amazon&utm_key=vw_430.vh_1248.otherAmt_1.time_10"
@@ -28,7 +29,7 @@ def punishment_response():
     print_results(False)
     LOGGER.info("GRRRR punishing")
     if not have_donated_today_already():
-        donate_to_wikipedia(actually_do_it=False)
+        donate_to_wikipedia(actually_do_it=True)
     else:
         LOGGER.info("Stopping process early because I've already donated")
 
