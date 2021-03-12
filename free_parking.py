@@ -10,10 +10,10 @@ from selenium.common.exceptions import NoSuchElementException
 LOGGER = logging.getLogger(__name__)
 
 DIR_NAME = os.path.dirname(os.path.realpath(__file__))
-F_DRIVER = os.path.join(DIR_NAME, r'Driver/geckodriver.exe')
-CACHE = os.path.join(DIR_NAME, r"Phone_Results/cache/records.txt")
-PROFILE = os.path.join(DIR_NAME, r'Profile/rust_mozprofileNODzu1')
-RESULTS_FOLDER = os.path.join(DIR_NAME, r'Phone_Results/')
+F_DRIVER = os.path.join(DIR_NAME, r'Driver\geckodriver.exe')
+CACHE = os.path.join(DIR_NAME, r"Phone_Results\cache\records.txt")
+PROFILE = os.path.join(DIR_NAME, r'Profile\rust_mozprofileNODzu1')
+RESULTS_FOLDER = os.path.join(DIR_NAME, r'Phone_Results\\')
 BASE_PAGE = "https://payments.wikimedia.org/index.php/Special:GatewayFormChooser?payment_method=amazon&recurring=" \
             "false&currency_code=USD&country=US&uselang=en&amount=1&utm_medium=wmfSite&utm_campaign=navButton&utm_" \
             "source=113.default~default~default~default~control.amazon&utm_key=vw_430.vh_1248.otherAmt_1.time_10"
@@ -80,8 +80,10 @@ def donate_to_wikipedia(actually_do_it=False):
 
 
 def create_web_object_with_base_page():
-    profile = webdriver.FirefoxProfile(profile_directory=PROFILE)
-    web_object = webdriver.Firefox(executable_path=F_DRIVER, firefox_profile=profile)
+    options = webdriver.FirefoxOptions()
+    options.add_argument("-profile " + PROFILE)
+    web_object = webdriver.Firefox(executable_path=F_DRIVER, options=options,
+                                   service_args=["--marionette-port", "2828"])
     web_object.get(BASE_PAGE)
     time.sleep(2)
     return web_object
