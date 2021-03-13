@@ -6,6 +6,9 @@ import os
 import time
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as ec
+from selenium.webdriver.common.by import By
 
 LOGGER = logging.getLogger(__name__)
 
@@ -72,7 +75,7 @@ def donate_to_wikipedia(actually_do_it=False):
     usd_field = get_element_by_xpath(web_object, '//*[@id="selected-amount"]')
 
     if usd_field and donate_button:
-        verify_donation_requirements_and_submit(donate_button, usd_field, actually_do_it=actually_do_it)
+        verify_donation_requirements_and_submit(donate_button, usd_field, web_object, actually_do_it=actually_do_it)
     else:
         LOGGER.critical("Something is wrong... didn't find usd_file or donate_button.... not moving forward")
 
@@ -100,7 +103,7 @@ def handle_continue_page(web_object):
         LOGGER.info("Continue page not found.... no big deal.... lets assume donation page is up")
 
 
-def verify_donation_requirements_and_submit(donate_button, usd_field, actually_do_it=False):
+def verify_donation_requirements_and_submit(donate_button, usd_field, web_object, actually_do_it=False):
     LOGGER.info("Found the donate page.... verifying and donating if meets requirements")
     usd_amount = usd_field.get_attribute("innerHTML").strip()
     LOGGER.info("Dollar amount found: {}, dollar amount wanted ${}.00".format(usd_amount, DOLLAR_AMOUNT))
@@ -109,7 +112,14 @@ def verify_donation_requirements_and_submit(donate_button, usd_field, actually_d
         if actually_do_it:
             LOGGER.info("Donating!!!!!")
             donate_button.click()
-            time.sleep(2)
+            try:
+                WebDriverWait(web_object, 30)\
+                    .until(ec.presence_of_element_located((By.XPATH,
+                                                           '/html/body/div[3]/div[3]/div[5]/div[1]'
+                                                           '/div[1]/header/div[2]/div[1]/div[2]/div/h1')))
+                LOGGER.info("Found confirmation! Good job donating money")
+            except Exception as e:
+                LOGGER.critical("Couldn't find confirmation.... here is error {}".format(str(e)))
         else:
             LOGGER.info("Would've donated if bool told me to!!!")
     else:
