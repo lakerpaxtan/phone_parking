@@ -68,7 +68,9 @@ def donate_to_wikipedia(actually_do_it=False):
     LOGGER.info("Opening base web page.....")
 
     web_object = create_web_object_with_base_page()
+    time.sleep(3)
     handle_continue_page(web_object)
+    time.sleep(3)
 
     LOGGER.info("Analyzing elements on page.....")
     donate_button = get_element_by_xpath(web_object, '//*[@id="paymentSubmitBtn"]')
@@ -110,13 +112,13 @@ def verify_donation_requirements_and_submit(donate_button, usd_field, web_object
     if usd_amount == "$" + str(DOLLAR_AMOUNT) + ".00":
         write_today_to_donation_cache()
         if actually_do_it:
-            LOGGER.info("Donating!!!!!")
-            donate_button.click()
             try:
+                donate_button.click()
+                LOGGER.info("Donating!!!!!")
                 WebDriverWait(web_object, 30)\
-                    .until(ec.presence_of_element_located((By.XPATH,
-                                                           '/html/body/div[3]/div[3]/div[5]/div[1]'
-                                                           '/div[1]/header/div[2]/div[1]/div[2]/div/h1')))
+                    .until(ec.presence_of_element_located((By.XPATH, '/html/body/div[3]/div[3]/div[5]/'
+                                                                     'div[1]/div[1]/div/div[2]/div[1]/div[2]/div')))
+
                 LOGGER.info("Found confirmation! Good job donating money")
             except Exception as e:
                 LOGGER.critical("Couldn't find confirmation.... here is error {}".format(str(e)))
