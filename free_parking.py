@@ -17,10 +17,12 @@ F_DRIVER = os.path.join(DIR_NAME, r'Driver\geckodriver.exe')
 CACHE = os.path.join(DIR_NAME, r"Phone_Results\cache\records.txt")
 PROFILE = os.path.join(DIR_NAME, r'Profile\rust_mozprofileNODzu1')
 RESULTS_FOLDER = os.path.join(DIR_NAME, r'Phone_Results\\')
+
+DOLLAR_AMOUNT = 5
 BASE_PAGE = "https://payments.wikimedia.org/index.php/Special:GatewayFormChooser?payment_method=amazon&recurring=" \
-            "false&currency_code=USD&country=US&uselang=en&amount=1&utm_medium=wmfSite&utm_campaign=navButton&utm_" \
-            "source=113.default~default~default~default~control.amazon&utm_key=vw_430.vh_1248.otherAmt_1.time_10"
-DOLLAR_AMOUNT = 1
+            "false&currency_code=USD&country=US&uselang=en&amount={}&utm_medium=wmfSite&utm_campaign=navButton&utm_" \
+            "source=113.default~default~default~default~control.amazon&utm_key=vw_430.vh_1248" \
+            ".otherAmt_{}.time_10".format(str(DOLLAR_AMOUNT),str(DOLLAR_AMOUNT))
 
 
 def reward_response():
